@@ -1,0 +1,227 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{vietnam}
+\usepackage[margin = 2cm]{geometry}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{color}
+
+\titleformat*{\section}{\LARGE\bfseries}
+\titleformat*{\subsection}{\Large\bfseries}
+\titleformat*{\subsubsection}{\large\bfseries\color[rgb]{0,0,1}}
+
+\begin{document}
+\title{\Huge\color[rgb]{0,1,0} Lua Reference Book}
+\date{18 tháng 12 năm 2016}
+\author{\Large\color[rgb]{0,0,1} Tạ Quang Tùng}
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Lua C API} 
+
+\subsection{Các hàm luaL}
+\subsubsection{luaL\_newstate}
+\textbf{lua\_State *luaL\_newstate();} \\
+Tạo một state mới, độc lập. Trả về NULL nếu thiếu bộ nhớ. 
+\subsubsection{lua\_close} 
+\textbf{void lua\_close(lua\_State *L);} \\
+Destroy toàn bộ mọi thứ liên quan đến State
+\subsubsection{luaL\_openlibs} 
+\textbf{void luaL\_openlibs(lua\_State *L);} \\
+Mở các thư viện chuẩn của Lua
+\subsubsection{luaL\_loadfile}
+\textbf{int luaL\_loadfile(lua\_State *L, const char *path);} \\
+Load file từ path lên và compile nó. Nếu có lỗi thì trả về true và push string lỗi lên stack. Thường gọi hàm lua\_pcall(L, 0, 0, 0) ngay sau nó để thực hiện phần thân chương trình. \\
+Các thao tác trên tương đương với luaL\_dofile(L, path): \\
+(luaL\_loadfile(L, path) || lua\_pcall(L, 0, 0, 0))
+\subsubsection{luaL\_loadstring} 
+\textbf{int luaL\_loadstring(lua\_State *L, const char *s);} \\
+Giống như hàm trên loadfile nhưng load một xâu thay vì từ file
+\subsubsection{luaL\_newlib} 
+\textbf{void luaL\_newlib(lua\_State *L, const luaL\_Reg *list);} \\
+Tạo một mảng các hàm từ \textit{list} - thành một module, push nó lên stack (pop vào biến nào đó cần thiết để sử dụng)
+\subsubsection{luaopen\_*} 
+\textbf{int luaopen\_* (lua\_State *L);}  \\
+* đó là tên của module. Hàm thường trả về 1 để chỉ số tham số trả về là 1. Bắt nguồn từ từ khóa require "*", Lua sẽ cố gắng load file .dll hoặc .so rồi gọi hàm luaopen\_* để lấy một table các hàm (thường được tạo bằng luaL\_newlib) từ top stack. \\
+Ví dụ một hàm: \\ 
+{ \bfseries
+int luaopen\_test(lua\_State *L) \{ \\
+\hspace*{1cm}luaL\_newlib(L, testlib); \\
+\hspace*{1cm}return 1; // Chỉ định chỉ có 1 tham số trả về \\
+\}
+} \\
+Với testlib là mảng các luaL\_Reg.
+
+\subsubsection{luaL\_requiref} 
+\textbf{void luaL\_requiref(lua\_State *L, \\
+\hspace*{4cm} const char *modname, \\
+\hspace*{4cm} lua\_CFunction openf, int global);} \\
+Load một module vào lua\_State (trước khi dùng lua\_loadfile) như một thư viện (giống như thư viện chuẩn). Set giá trị của \textbf{package.loaded[modname]}. Sẽ sử dụng hàm \textit{openf} để lấy module cần thiết (openf giống như luaopen\_* ở trên), và vẫn để nguyên giá trị của module trên top stack (pop đi nếu cần thiết).  \\
+Thường được sử dụng khi không muốn tạo .dll hay .so \\
+\textit{global} chỉ định xem có muốn module ở chế độ global hay không. \\
+Ví dụ: \\
+\textbf{
+luaL\_requiref(L, "test", luaopen\_test, 1);
+}
+
+
+\subsection{Kiểu dữ liệu}
+\subsubsection{lua\_Number}
+Tương ứng với double
+\subsubsection{lua\_Integer}
+Tương ứng với long long
+\subsubsection{lua\_Unsigned}
+Tương ứng với unsigned long long
+\subsubsection{lua\_CFunction} 
+\textbf{typedef int (*lua\_CFunction)(lua\_State *L);} \\
+Prototype các hàm dùng để gọi từ Lua, các tham số đầu vào được lấy từ stack, push lần lượt từ trái sang phải, bắt đầu từ index = 1 (stack hoàn toàn mới mỗi lần gọi). Trả về cũng bằng stack, return n; với n là số tham số trả về
+
+\subsubsection{luaL\_Reg} 
+typedef struct luaL\_Reg \{ \\
+\hspace*{1cm} const char *name; \\
+\hspace*{1cm} lua\_CFunction func; \\
+\} luaL\_Reg; \\
+Kiểu dữ liệu cho mảng các hàm để được register bởi luaL\_register. \textit{name} là tên của hàm, \textit{func} là con trỏ hàm. Bất kì mảng của các luaL\_Reg đều phải kết thúc bằng \{NULL, NULL\}
+
+
+\subsection{Thao tác với stack} 
+Để tham chiếu tới một phần tử trên stack, ta dùng những index. Phần tử đầu tiên trên stack có index = 1, phần tử thứ hai là 2, phần tử cuối cùng có index = -1
+\subsubsection{lua\_pushnil}
+\textbf{void lua\_pushnil(lua\_State *L);} 
+\subsubsection{lua\_pushboolean}
+\textbf{void lua\_pushboolean(lua\_State *L, int bool);} 
+\subsubsection{lua\_pushnumber}
+\textbf{void lua\_pushnumber(lua\_State *L, lua\_Number n);} 
+\subsubsection{lua\_pushinteger}
+\textbf{void lua\_pushinteger(lua\_State *L, lua\_Integer n);}
+\subsubsection{lua\_pushunsigned}
+\textbf{void lua\_pushunsigned(lua\_State *L, lua\_Unsigned n);}
+\subsubsection{lua\_pushstring}
+\textbf{void lua\_pushstring(lua\_State *L, const char *s);} \\
+Lua tạo một bản copy của string, nên không ảnh hưởng đến string đưa vào tham số \\
+Xác định kết thúc bởi null
+\subsubsection{lua\_pushlstring}
+\textbf{void lua\_pushlstring(lua\_State *L, const char *s, size\_t len);} \\
+Xác định kết thúc xâu bởi len
+\subsubsection{lua\_checkstack}
+\textbf{int lua\_checkstack(lua\_State *L, int size);} \\
+Kiểm tra xem stack đã đầy hay chưa, trả về false nếu không thể grow stack tới size đó
+
+\subsubsection{lua\_is*}
+\textbf{int lua\_is* (lua\_State *L, int index);} \\
+Để kiểm tra xem phần tử nào đó trên stack có đúng type mong muốn hay không (Kiểm tra xem nó có thể convert thành kiểu mong muốn không). * có thể là number, string, ...
+\subsubsection{lua\_to*}
+\textbf{<type> lua\_to* (lua\_State *L, int index);} \\
+Chuyển giá trị trên stack có index thành giá trị mong muốn. Không làm thay đổi kích thước stack. * có thể là string, number, integer, boolean, ...
+\subsubsection{lua\_gettop}
+\textbf{int lua\_gettop(lua\_State *L);} \\
+Trả về index của top stack, hay kích thước của stack đó.
+\subsubsection{lua\_settop}
+\textbf{void lua\_settop(lua\_State *L, int index);} \\
+Thay đổi top index của stack 
+\subsubsection{lua\_pushvalue}
+\textbf{void lua\_pushvalue(lua\_State *L, int index);} \\
+Sao chép phần tử tại index rồi đẩy nó lên top stack
+\subsubsection{lua\_remove}
+\textbf{void lua\_remove(lua\_State *L, int index);} \\
+Remove một phần tử tại index, shift lại stack
+\subsubsection{lua\_insert}
+\textbf{void lua\_insert(lua\_State *L, int index);} \\
+Di chuyển phần tử top và chèn nó vào index bằng cách shift các phần tử phía trên index để tạo khoảng trống	
+\subsubsection{lua\_replace}
+\textbf{void lua\_replace(lua\_State *L, int index);} \\
+Di chuyển phần tử từ top đến vị trí đã cho bằng cách thay thế vị trí đó
+\subsubsection{lua\_pop} 
+\textbf{\#define lua\_pop(L, n) lua\_settop(L, -1 - (n))}
+
+\subsection{Thao tác với các biến global và table}
+\subsubsection{lua\_getglobal}
+\textbf{void lua\_getglobal(lua\_State *L, const char *name);} \\
+Push lên stack phần tử global có tên name.
+\subsubsection{lua\_setglobal} 
+\textbf{void lua\_setglobal(lua\_State *L, const char *name);} \\
+Pop phần tử của stack và gán nó và biến global tên name
+\subsubsection{lua\_gettable} 
+\textbf{void lua\_getttable(lua\_State *L, int index);} \\
+Tham số index chỉ vị trí của biến table đã được push lên. Top của stack là key (dưới dạng string). Hàm sẽ pop key đó ra rồi push table[key] lên stack (Hay giá trị đang muốn nhận)
+\subsubsection{lua\_getfield}
+\textbf{void lua\_getfield(lua\_State *L, int index, const char *key);} \\
+Push lên stack giá trị table[key], với table nằm trên stack có vị trí index 
+\subsubsection{lua\_settable} 
+\textbf{void lua\_settable(lua\_State *L, int index);} \\
+index chỉ vị trí của biến table trên stack. Top của stack là value, ngay dưới top là key. Nó sẽ thực hiện gán table[key] = value
+
+\subsubsection{lua\_setfield}
+\textbf{void lua\_setfield(lua\_State *L, int index, const char *key);} \\
+index chỉ vị trí của biến table trên stack. Top của stack là value. Nó sẽ thực hiện phép gán table[key] = value
+
+\subsubsection{lua\_newtable}
+\textbf{void lua\_newtable(lua\_State *L);} \\
+Tạo một empty table và push nó lên stack
+
+\subsection{Thao tác gọi hàm}
+\subsubsection{lua\_call}
+\textbf{void lua\_call(lua\_State *L, int nargs, int nresults);} \\
+Gọi một hàm:
+\begin{itemize}
+\item nargs: số tham số đầu vào
+\item nresults: số tham số trả về
+\end{itemize}
+- Trước khi gọi hàm phải push hàm đó lên stack bằng gọi lua\_getglobal. Sau đó push các tham số đầu vào, theo thứ tự từ trái sang phải \\
+- Hàm sẽ pop lấy các tham số đầu vãn, đồng thời pop cả biến hàm đã push trước đó (giá trị để xác định gọi hàm nào). Gọi hàm đó và push các giá trị trả về lên stack theo thứ tự từ trái sang phải. \\
+- Bất kì một lỗi nào xảy ra trong lua\_call sẽ được nhảy ra nhờ longjmp
+
+
+\subsubsection{lua\_pcall} 
+\textbf{int lua\_pcall(lua\_State *L, int nargs, nresults, int errfunc);} \\
+Gọi một hàm trong chế độ được bảo vệ.
+\begin{itemize}
+\item nargs: số tham số đầu vào 
+\item nresults: số tham số trả về 
+\end{itemize}
+- Hàm sẽ pop lấy các tham số đầu vào, đồng thời pop luôn cả giá trị biến hàm đã push trước đó. Thực hiện gọi hàm và push các giá trị trả về lên stack. \\
+- Nếu có bất kì lỗi nào, hàm sẽ catch lỗi đó, push error message lên stack và trả về một error code (khác 0). \\
+ - errfunc là vị trí của hàm sẽ handle error trên stack, 0 nếu không chỉ định hàm nào.  
+
+Các mã lỗi:
+\begin{itemize}
+\item LUA\_ERRRUN: lỗi runtime.
+\item LUA\_ERRMEM: lỗi cấp phát bộ nhớ. (Sẽ không gọi errfunc).
+\item LUA\_ERRERR: lỗi trong khi gọi hàm errfunc.
+\end{itemize}
+
+\subsubsection{lua\_pushcfunction}
+\textbf{void lua\_pushcfunction(lua\_State *L, lua\_CFunction func);} \\
+Đẩy func lên stack (pop nó ra một biến global nào đó để có thể sử dụng).
+\subsection{Gọi một hàm Lua từ C}
+Các thao tác để gọi một hàm từ C: 
+\begin{enumerate}
+\item Push hàm đó lên trên stack bằng lua\_getglobal.
+\item Push các tham số đầu vào lên stack theo thứ tự từ trái sang phải, dùng các hàm lua\_push*.
+\item Gọi một trong các hàm lua\_pcall, lua\_call với các tham số cần thiết.
+\item Lấy ra các giá trị trả về nhờ các hàm lua\_to*.
+\item Pop n giá trị trả về.
+\end{enumerate}
+\subsection{Gọi một hàm C từ Lua}
+Các bước để gọi một hàm C từ Lua:
+\begin{enumerate}
+\item Định nghĩa các hàm C theo chuẩn của lua\_CFunction:
+	\begin{enumerate}
+	\item Lấy các tham số nhờ các hàm lua\_to*
+	\item Pop n tham số
+	\item Thực hiện hàm
+	\item Push các giá trị trả về
+	\item Return số giá trị trả về
+	\end{enumerate}
+\item Đăng kí các hàm đó nhờ một trong các cách:
+	\begin{itemize}
+	\item Sử dụng lua\_pushfunction để gán nó vào một biến global nào đó.
+	\item Sử dụng luaL\_newlib để push một table các hàm lên rồi gán vào một biến global nào đó.
+	\item Sử dụng luaL\_requiref để đăng kí một module .
+	\item Sử dụng .dll hoặc .so nhờ định nghĩa hàm luaopen\_*.
+	\end{itemize}
+\item Gọi hàm đó từ trong mã Lua
+\end{enumerate}
+
+\end{document}

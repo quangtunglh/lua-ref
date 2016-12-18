@@ -1,0 +1,48 @@
+\BOOKMARK [1][-]{section.1}{Lua C API}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{C\341c h\340m luaL}{section.1}% 2
+\BOOKMARK [3][-]{subsubsection.1.1.1}{luaL\137newstate}{subsection.1.1}% 3
+\BOOKMARK [3][-]{subsubsection.1.1.2}{lua\137close}{subsection.1.1}% 4
+\BOOKMARK [3][-]{subsubsection.1.1.3}{luaL\137openlibs}{subsection.1.1}% 5
+\BOOKMARK [3][-]{subsubsection.1.1.4}{luaL\137loadfile}{subsection.1.1}% 6
+\BOOKMARK [3][-]{subsubsection.1.1.5}{luaL\137loadstring}{subsection.1.1}% 7
+\BOOKMARK [3][-]{subsubsection.1.1.6}{luaL\137newlib}{subsection.1.1}% 8
+\BOOKMARK [3][-]{subsubsection.1.1.7}{luaopen\137*}{subsection.1.1}% 9
+\BOOKMARK [3][-]{subsubsection.1.1.8}{luaL\137requiref}{subsection.1.1}% 10
+\BOOKMARK [2][-]{subsection.1.2}{Kiu d liu}{section.1}% 11
+\BOOKMARK [3][-]{subsubsection.1.2.1}{lua\137Number}{subsection.1.2}% 12
+\BOOKMARK [3][-]{subsubsection.1.2.2}{lua\137Integer}{subsection.1.2}% 13
+\BOOKMARK [3][-]{subsubsection.1.2.3}{lua\137Unsigned}{subsection.1.2}% 14
+\BOOKMARK [3][-]{subsubsection.1.2.4}{lua\137CFunction}{subsection.1.2}% 15
+\BOOKMARK [3][-]{subsubsection.1.2.5}{luaL\137Reg}{subsection.1.2}% 16
+\BOOKMARK [2][-]{subsection.1.3}{Thao t\341c vi stack}{section.1}% 17
+\BOOKMARK [3][-]{subsubsection.1.3.1}{lua\137pushnil}{subsection.1.3}% 18
+\BOOKMARK [3][-]{subsubsection.1.3.2}{lua\137pushboolean}{subsection.1.3}% 19
+\BOOKMARK [3][-]{subsubsection.1.3.3}{lua\137pushnumber}{subsection.1.3}% 20
+\BOOKMARK [3][-]{subsubsection.1.3.4}{lua\137pushinteger}{subsection.1.3}% 21
+\BOOKMARK [3][-]{subsubsection.1.3.5}{lua\137pushunsigned}{subsection.1.3}% 22
+\BOOKMARK [3][-]{subsubsection.1.3.6}{lua\137pushstring}{subsection.1.3}% 23
+\BOOKMARK [3][-]{subsubsection.1.3.7}{lua\137pushlstring}{subsection.1.3}% 24
+\BOOKMARK [3][-]{subsubsection.1.3.8}{lua\137checkstack}{subsection.1.3}% 25
+\BOOKMARK [3][-]{subsubsection.1.3.9}{lua\137is*}{subsection.1.3}% 26
+\BOOKMARK [3][-]{subsubsection.1.3.10}{lua\137to*}{subsection.1.3}% 27
+\BOOKMARK [3][-]{subsubsection.1.3.11}{lua\137gettop}{subsection.1.3}% 28
+\BOOKMARK [3][-]{subsubsection.1.3.12}{lua\137settop}{subsection.1.3}% 29
+\BOOKMARK [3][-]{subsubsection.1.3.13}{lua\137pushvalue}{subsection.1.3}% 30
+\BOOKMARK [3][-]{subsubsection.1.3.14}{lua\137remove}{subsection.1.3}% 31
+\BOOKMARK [3][-]{subsubsection.1.3.15}{lua\137insert}{subsection.1.3}% 32
+\BOOKMARK [3][-]{subsubsection.1.3.16}{lua\137replace}{subsection.1.3}% 33
+\BOOKMARK [3][-]{subsubsection.1.3.17}{lua\137pop}{subsection.1.3}% 34
+\BOOKMARK [2][-]{subsection.1.4}{Thao t\341c vi c\341c bin global v\340 table}{section.1}% 35
+\BOOKMARK [3][-]{subsubsection.1.4.1}{lua\137getglobal}{subsection.1.4}% 36
+\BOOKMARK [3][-]{subsubsection.1.4.2}{lua\137setglobal}{subsection.1.4}% 37
+\BOOKMARK [3][-]{subsubsection.1.4.3}{lua\137gettable}{subsection.1.4}% 38
+\BOOKMARK [3][-]{subsubsection.1.4.4}{lua\137getfield}{subsection.1.4}% 39
+\BOOKMARK [3][-]{subsubsection.1.4.5}{lua\137settable}{subsection.1.4}% 40
+\BOOKMARK [3][-]{subsubsection.1.4.6}{lua\137setfield}{subsection.1.4}% 41
+\BOOKMARK [3][-]{subsubsection.1.4.7}{lua\137newtable}{subsection.1.4}% 42
+\BOOKMARK [2][-]{subsection.1.5}{Thao t\341c goi h\340m}{section.1}% 43
+\BOOKMARK [3][-]{subsubsection.1.5.1}{lua\137call}{subsection.1.5}% 44
+\BOOKMARK [3][-]{subsubsection.1.5.2}{lua\137pcall}{subsection.1.5}% 45
+\BOOKMARK [3][-]{subsubsection.1.5.3}{lua\137pushcfunction}{subsection.1.5}% 46
+\BOOKMARK [2][-]{subsection.1.6}{Goi mt h\340m Lua t C}{section.1}% 47
+\BOOKMARK [2][-]{subsection.1.7}{Goi mt h\340m C t Lua}{section.1}% 48
