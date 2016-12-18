@@ -224,4 +224,13 @@ Các bước để gọi một hàm C từ Lua:
 \item Gọi hàm đó từ trong mã Lua
 \end{enumerate}
 
+\subsection{Import mã nguồn}
+Mã nguồn Lua được import thẳng vào thư mục nơi chứa chương trình, vào project để biên dịch. Xóa bỏ hai file lua.c và luac.c để vì có chứa hàm main. \\
+\textbf{-Đối với C thì:} \\
+\#include "lua.h" \\
+\#include "lualib.h" \\
+\#include "lauxlib.h" \\
+\textbf{-Đối với C++ thì:} \\
+\#include "lua.hpp"
+
 \end{document}

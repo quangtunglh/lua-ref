@@ -46,3 +46,4 @@
 \contentsline {subsubsection}{\numberline {1.5.3}lua\_pushcfunction}{8}{subsubsection.1.5.3}
 \contentsline {subsection}{\numberline {1.6}G\IeC {\d o}i m\IeC {\d \ocircumflex }t h\IeC {\`a}m Lua t\IeC {\`\uhorn } C}{8}{subsection.1.6}
 \contentsline {subsection}{\numberline {1.7}G\IeC {\d o}i m\IeC {\d \ocircumflex }t h\IeC {\`a}m C t\IeC {\`\uhorn } Lua}{8}{subsection.1.7}
+\contentsline {subsection}{\numberline {1.8}Import m\IeC {\~a} ngu\IeC {\`\ocircumflex }n}{9}{subsection.1.8}
